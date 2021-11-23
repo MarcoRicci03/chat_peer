@@ -35,7 +35,12 @@ public class thread_ricevi extends Thread {
         try {
             while (true) {
                 Socket s = server_socket.accept();
-                System.out.println("SERVER: " + s.getInputStream().read());
+                InputStreamReader isr = new InputStreamReader(s.getInputStream());
+                BufferedReader br = new BufferedReader(isr);
+                
+                System.out.println("SERVER: " + br.readLine());
+                System.out.println(s.getPort());
+                s.close();
                 
             }
         } catch (IOException ex) {

@@ -22,20 +22,15 @@ public class Chat_peer {
         Scanner s = new Scanner(System.in);
         System.out.println("Inserire la porta e l'indirizzo di questo peer nel formato ip:porta : ");
         String[] v = s.nextLine().split(":");
-        manage_peer peer_control = new manage_peer(v[0], Integer.parseInt(v[1]));
+        manage_peer peer_control = new manage_peer();
 
-        thread_ricevi tR = new thread_ricevi(peer_control);
+        //thread_ricevi tR = new thread_ricevi(peer_control);
         thread_manda tM = new thread_manda(peer_control);
 
-        if (s.nextLine().equals("1")) {
-            tR.start();
-        }
-        if (s.nextLine().equals("2")) {
-            tM.start();
-        }
+        
 
         //tR.start();
-        //tM.start();
+        tM.start();
     }
 
 }

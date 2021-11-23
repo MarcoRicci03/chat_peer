@@ -14,16 +14,14 @@ import java.net.Socket;
  */
 public class manage_peer {
 
-    Socket client_socket;
-    ServerSocket server_socket;
-    String ip;
-    Integer port;
+    private Socket client_socket;
+    private ServerSocket server_socket;
+    private String ip;
+    private Integer port;
 
-    public manage_peer(String ip, Integer port) throws IOException {
+    public manage_peer() throws IOException {
         client_socket = new Socket();
         server_socket = new ServerSocket();
-        this.ip = ip;
-        this.port = port;
     }
     
     
