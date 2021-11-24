@@ -20,17 +20,26 @@ public class Chat_peer {
      */
     public static void main(String[] args) throws IOException {
         Scanner s = new Scanner(System.in);
+        System.out.println("Inserire il nome del peer: ");
+        String name = s.nextLine();
         System.out.println("Inserire la porta e l'indirizzo di questo peer nel formato ip:porta : ");
         String[] v = s.nextLine().split(":");
-        manage_peer peer_control = new manage_peer();
+        manage_peer peer_control = new manage_peer(name, v[0], Integer.parseInt(v[1]));
 
-        //thread_ricevi tR = new thread_ricevi(peer_control);
-        thread_manda tM = new thread_manda(peer_control);
+        Thread_ricevi_connessione tR = new Thread_ricevi_connessione(peer_control);
+        Thread_manda_connessione tM = new Thread_manda_connessione(peer_control);
 
-        
+        System.out.println("Vuoi attendere altri peer o mandare un messaggio di ricerca? m-manda r-ricevi");
+        String str = s.nextLine();
+        if (str.equalsIgnoreCase("m")) {
+            System.out.println("Inserire prima l'ip del destinatario, dopo la porta: ");
+            peer_control.setPeer_connesso(s.nextLine(), s.nextInt());
+            tM.start();
+        } else if (str.equalsIgnoreCase("r")) {
 
-        //tR.start();
-        tM.start();
+            tR.start();
+        }
+
     }
 
 }

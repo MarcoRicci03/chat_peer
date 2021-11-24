@@ -18,33 +18,36 @@ import java.util.logging.Logger;
  *
  * @author marco
  */
-public class thread_ricevi extends Thread {
+public class Thread_ricevi_connessione extends Thread {
 
-    ServerSocket server_socket;
-    manage_peer peer_control;
+    private ServerSocket server_socket;
+    private manage_peer peer_control;
 
-    public thread_ricevi(manage_peer peer_control) throws IOException {
+    public Thread_ricevi_connessione(manage_peer peer_control) throws IOException {
         this.peer_control = peer_control;
         server_socket = new ServerSocket(peer_control.getPort());
 
     }
 
     public void run() {
-
+        String[] vect;
+        Socket s;
+        InputStreamReader isr;
         System.out.println("Il peer é in ascolto...");
         try {
             while (true) {
-                Socket s = server_socket.accept();
-                InputStreamReader isr = new InputStreamReader(s.getInputStream());
+                s = server_socket.accept();
+                isr = new InputStreamReader(s.getInputStream());
                 BufferedReader br = new BufferedReader(isr);
-                
-                System.out.println("SERVER: " + br.readLine());
-                System.out.println(s.getPort());
-                s.close();
-                
+                vect = br.readLine().split(";"); //c;ip;porta;nome
+
+                System.out.println("SERVER: Connessione avvenuta con: " + vect[3] + " la cui porta è " + vect[2] + " e l'indirizzo: " + vect[1]);
+                peer_control.setPeer_connesso(vect[1], Integer.parseInt(vect[2]));
+            
+         
             }
         } catch (IOException ex) {
-            Logger.getLogger(thread_ricevi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Thread_ricevi_connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -21,27 +21,29 @@ import java.util.logging.Logger;
  *
  * @author marco
  */
-public class thread_manda extends Thread {
+public class Thread_manda_connessione extends Thread {
 
-    Socket client_socket;
-    manage_peer peer_control;
-    InputStream is;
-    OutputStream os;
+    private Socket client_socket;
+    private manage_peer peer_control;
+    private InputStream is;
+    private OutputStream os;
+    
+    
 
-    public thread_manda(manage_peer peer_control) throws IOException {
+    public Thread_manda_connessione(manage_peer peer_control) throws IOException {
         this.peer_control = peer_control;
 
     }
 
     public void run() {
         try {
-            client_socket = new Socket("localhost", 666);
+            client_socket = new Socket(peer_control.getPeer_connesso().getIp_peer_connesso(), peer_control.getPeer_connesso().getPort_peer_connesso());
             //qua devo mandare il mio indirizzo ip e la mia porta preceduti
             PrintWriter out = new PrintWriter(client_socket.getOutputStream(), true);
-            out.println("c;" + peer_control.getIp() + ";" + peer_control.getPort());
+            out.println("c;" + peer_control.getIp() + ";" + peer_control.getPort() + ";" + peer_control.getName());
             client_socket.close();
         } catch (IOException ex) {
-            Logger.getLogger(thread_manda.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Thread_manda_connessione.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
