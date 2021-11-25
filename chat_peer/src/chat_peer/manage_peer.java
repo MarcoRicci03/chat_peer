@@ -30,6 +30,22 @@ public class Manage_peer {
     private Boolean connesso;
     private String ip_peer_connesso;
 
+    public String getNome_peer_connesso() {
+        return nome_peer_connesso;
+    }
+
+    public Integer getPort_peer_connesso() {
+        return port_peer_connesso;
+    }
+
+    public Boolean getConnesso() {
+        return connesso;
+    }
+
+    public String getIp_peer_connesso() {
+        return ip_peer_connesso;
+    }
+
     public Manage_peer(String name, String ip, Integer port) throws IOException {
         client_socket = new Socket();
         this.ip = ip;
@@ -62,6 +78,7 @@ public class Manage_peer {
     public void ricevi_connessione() {
         String[] vect;
         InputStreamReader isr;
+        int i = 0;
         do {
 
             try {

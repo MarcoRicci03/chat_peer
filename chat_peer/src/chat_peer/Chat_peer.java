@@ -24,6 +24,8 @@ public class Chat_peer {
         System.out.println("Inserire il nome del peer e dopo aver premuto invio inserire la porta (indirizzo settato di default a localhost).");
         Manage_peer mp = new Manage_peer(s.nextLine(), "localhost", s.nextInt());//String name, String ip, Integer port
         Thread_peer tp = new Thread_peer(mp);
+        Thread_ricevi tr = new Thread_ricevi(mp);
+        tr.start();
         tp.start();
     }
 
