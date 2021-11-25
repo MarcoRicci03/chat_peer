@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,6 +53,7 @@ public class Manage_peer {
         this.port = port;
         this.name = name;
         server_socket = new ServerSocket(this.port);
+        connesso = false;
     }
 
     //get
@@ -99,10 +101,11 @@ public class Manage_peer {
                             ip_peer_connesso = vect[1];
                             System.out.println("SERVER: Connessione avvenuta con: " + nome_peer_connesso
                                     + " la cui porta è " + port_peer_connesso + " e l'indirizzo: " + ip_peer_connesso);
+                            manda_connessione(port_peer_connesso, ip_peer_connesso);
                         }
                     }
                     case "m" -> {
-
+                        System.out.println("[" + nome_peer_connesso + "]: " + vect[1]);
                     }
                     case "d" -> {
 
@@ -132,11 +135,26 @@ public class Manage_peer {
 
     }
 
-    public void manda_messaggio() {
+    public void manda_messaggi() {
+        String str = "";
+        do {
+            try {
+                Scanner s = new Scanner(System.in);
+                client_socket = new Socket(ip_peer_connesso, port_peer_connesso);
+                //qua devo mandare il mio indirizzo ip e la mia porta preceduti
+                PrintWriter out = new PrintWriter(client_socket.getOutputStream(), true);
+                System.out.println("[" + name + "]");
+                str = s.nextLine();
+                out.println("m;" + str);
 
+            } catch (IOException ex) {
+                Logger.getLogger(Manage_peer.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+        } while (str != "stop");
     }
 
-    public void ricevi_messaggio() {
+    public void ricevi_messaggi() {
 
     }
 
