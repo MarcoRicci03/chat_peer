@@ -21,15 +21,20 @@ public class Thread_peer extends Thread {
     }
 
     public void run() {
-
+        String str;
         do {
             System.out.println("C-Connettiti con un'altro peer.");
             System.out.println("M-Inizia a scrivere con il peer connesso.");
             System.out.println("D-Chiudi la connessione con il peer.");
             System.out.println("(Indifferente se la lettera é maiuscola o minuscola)");
             s = new Scanner(System.in);
+            if (mp.getScrivendo()) {
+                str = "m";
+            } else {
+                str = s.nextLine();
+            }
 
-            switch (s.nextLine().toLowerCase()) {
+            switch (str.toLowerCase()) {
                 case "c" -> {
                     //Connessione con altro peer
                     mp.manda_connessione(s.nextInt(), "localhost");
@@ -37,7 +42,11 @@ public class Thread_peer extends Thread {
 
                 case "m" -> {
                     //Inizia a messaggiare
-                    mp.manda_messaggi();
+                    if (mp.getConnesso()) {
+                        mp.manda_messaggi();
+                    } else {
+                        System.out.println("Collegati a un peer prima.");
+                    }
                 }
 
                 case "d" -> {

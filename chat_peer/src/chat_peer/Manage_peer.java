@@ -31,6 +31,24 @@ public class Manage_peer {
     private Boolean connesso;
     private String ip_peer_connesso;
 
+    private Boolean scrivendo;
+
+    public Manage_peer(String name, String ip, Integer port) throws IOException {
+        client_socket = new Socket();
+        this.ip = ip;
+        this.port = port;
+        this.name = name;
+        server_socket = new ServerSocket(this.port);
+        connesso = false;
+        scrivendo = false;
+    }
+
+    //get
+
+    public Boolean getScrivendo() {
+        return scrivendo;
+    }
+    
     public String getNome_peer_connesso() {
         return nome_peer_connesso;
     }
@@ -47,16 +65,6 @@ public class Manage_peer {
         return ip_peer_connesso;
     }
 
-    public Manage_peer(String name, String ip, Integer port) throws IOException {
-        client_socket = new Socket();
-        this.ip = ip;
-        this.port = port;
-        this.name = name;
-        server_socket = new ServerSocket(this.port);
-        connesso = false;
-    }
-
-    //get
     public Socket getClient_socket() {
         return client_socket;
     }
@@ -106,6 +114,10 @@ public class Manage_peer {
                     }
                     case "m" -> {
                         System.out.println("[" + nome_peer_connesso + "]: " + vect[1]);
+                        if (vect[1].equalsIgnoreCase("stop")) {
+                            scrivendo = false;
+                            System.out.println("Scrivendo false");
+                        }
                     }
                     case "d" -> {
 
@@ -137,6 +149,7 @@ public class Manage_peer {
 
     public void manda_messaggi() {
         String str = "";
+        scrivendo = true;
         do {
             try {
                 Scanner s = new Scanner(System.in);
@@ -146,12 +159,17 @@ public class Manage_peer {
                 System.out.println("[" + name + "]");
                 str = s.nextLine();
                 out.println("m;" + str);
+                if (str.equals("stop")) {
+                    scrivendo = false;
+                    System.out.println("Scrivendo false");
+
+                }
 
             } catch (IOException ex) {
                 Logger.getLogger(Manage_peer.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
-        } while (str != "stop");
+        } while (scrivendo);
     }
 
     public void ricevi_messaggi() {
