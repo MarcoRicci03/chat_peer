@@ -87,11 +87,10 @@ public class Manage_peer {
     public void ricevi_connessione() {
         String[] vect;
         InputStreamReader isr;
-try {
-        client_socket = server_socket.accept();
-        do {
+        try {
+            client_socket = server_socket.accept();
+            do {
 
-            
                 isr = new InputStreamReader(client_socket.getInputStream());
                 BufferedReader br = new BufferedReader(isr);
                 vect = br.readLine().split(";"); //c;ip;porta;nome
@@ -122,12 +121,12 @@ try {
 
                     }
                 }
-            
-        } while (true);
+
+            } while (true);
         } catch (IOException ex) {
-                Logger.getLogger(Manage_peer.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
+            Logger.getLogger(Manage_peer.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
