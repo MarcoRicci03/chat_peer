@@ -44,11 +44,10 @@ public class Manage_peer {
     }
 
     //get
-
     public Boolean getScrivendo() {
         return scrivendo;
     }
-    
+
     public String getNome_peer_connesso() {
         return nome_peer_connesso;
     }
@@ -88,11 +87,11 @@ public class Manage_peer {
     public void ricevi_connessione() {
         String[] vect;
         InputStreamReader isr;
-        int i = 0;
+try {
+        client_socket = server_socket.accept();
         do {
 
-            try {
-                client_socket = server_socket.accept();
+            
                 isr = new InputStreamReader(client_socket.getInputStream());
                 BufferedReader br = new BufferedReader(isr);
                 vect = br.readLine().split(";"); //c;ip;porta;nome
@@ -123,11 +122,12 @@ public class Manage_peer {
 
                     }
                 }
-            } catch (IOException ex) {
+            
+        } while (true);
+        } catch (IOException ex) {
                 Logger.getLogger(Manage_peer.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
-        } while (true);
 
     }
 

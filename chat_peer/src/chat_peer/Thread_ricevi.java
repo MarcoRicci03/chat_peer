@@ -19,9 +19,9 @@ public class Thread_ricevi extends Thread {
     }
 
     public void run() {
-        do {
+        
             mp.ricevi_connessione();
-        } while (true);
+        
     }
 
 }
