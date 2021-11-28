@@ -98,7 +98,7 @@ public class Manage_peer {
                             System.out.println("SERVER: Connessione avvenuta con: " + nome_peer_connesso
                                     + " la cui porta è " + port_peer_connesso + " e l'indirizzo: " + ip_peer_connesso);
 
-                            manda_connessione(port_peer_connesso, ip_peer_connesso, 0);
+                            manda_connessione(port_peer_connesso, ip_peer_connesso);
 
                         }
                     }
@@ -122,7 +122,7 @@ public class Manage_peer {
     }
 
     //metodo per mandare una connessione
-    public void manda_connessione(Integer port_peer_connesso, String ip_peer_connesso, int i) throws SocketException, IOException {
+    public void manda_connessione(Integer port_peer_connesso, String ip_peer_connesso) throws SocketException, IOException {
         this.ip_peer_connesso = ip_peer_connesso;
         this.port_peer_connesso = port_peer_connesso;
 

@@ -42,7 +42,7 @@ public class Thread_peer extends Thread {
                         //     mp.ricevi_connessione(1);
                         // } else if (str.equalsIgnoreCase("m")) {
                         System.out.println("Inserisci la porta del destinatario");
-                        mp.manda_connessione(s.nextInt(), "localhost", 1);
+                        mp.manda_connessione(s.nextInt(), "localhost");
                         //  }
                     } catch (IOException ex) {
                         Logger.getLogger(Thread_peer.class.getName()).log(Level.SEVERE, null, ex);
