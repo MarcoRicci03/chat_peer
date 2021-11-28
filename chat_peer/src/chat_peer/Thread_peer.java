@@ -4,7 +4,11 @@
  */
 package chat_peer;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,22 +40,35 @@ public class Thread_peer extends Thread {
 
             switch (str.toLowerCase()) {
                 case "c" -> {
-                    //Connessione con altro peer
-                    mp.manda_connessione(s.nextInt(), "localhost");
+                    try {
+                        //Connessione con altro peer
+                        //System.out.println("Inserire r se si vuole ricevere una richiesta o m se si vuole mandare una richiesta: ");
+                        // str = s.nextLine();
+                        //if (str.equalsIgnoreCase("r")) {
+                        //     mp.ricevi_connessione(1);
+                        // } else if (str.equalsIgnoreCase("m")) {
+                        System.out.println("Inserisci la porta del destinatario");
+                        mp.manda_connessione(s.nextInt(), "localhost");
+                        //  }
+                    } catch (IOException ex) {
+                        Logger.getLogger(Thread_peer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
                 case "m" -> {
-                    //Inizia a messaggiare
-                    if (mp.getConnesso()) {
+                    try {
+                        //Inizia a messaggiare
                         mp.manda_messaggi();
-                    } else {
-                        System.out.println("Collegati a un peer prima.");
+                    } catch (UnknownHostException ex) {
+                        Logger.getLogger(Thread_peer.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Thread_peer.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
                 case "d" -> {
                     //Chiusura con peer
-
+                    mp.chiudi_connessione();
                 }
 
             }

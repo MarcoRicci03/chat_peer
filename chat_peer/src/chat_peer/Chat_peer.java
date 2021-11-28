@@ -5,8 +5,6 @@
 package chat_peer;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.util.Scanner;
 
 /**
