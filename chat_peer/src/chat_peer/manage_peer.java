@@ -68,6 +68,7 @@ public class Manage_peer {
     }
 
     public void ricevi_connessione(int i) throws SocketException {
+        int a = 0;
         byte[] data;
         DatagramPacket p;
         DatagramSocket s = new DatagramSocket(port);
