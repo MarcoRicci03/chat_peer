@@ -36,13 +36,14 @@ public class Thread_peer extends Thread {
                 case "c" -> {
                     try {
                         //Connessione con altro peer
-                        System.out.println("Inserire r se si vuole ricevere una richiesta o m se si vuole mandare una richiesta: ");
-                        str = s.nextLine();
-                        if (str.equalsIgnoreCase("r")) {
-                            mp.ricevi_connessione(1);
-                        } else if (str.equalsIgnoreCase("m")) {
-                            mp.manda_connessione(s.nextInt(), "localhost", 1);
-                        }
+                        //System.out.println("Inserire r se si vuole ricevere una richiesta o m se si vuole mandare una richiesta: ");
+                        // str = s.nextLine();
+                        //if (str.equalsIgnoreCase("r")) {
+                        //     mp.ricevi_connessione(1);
+                        // } else if (str.equalsIgnoreCase("m")) {
+                        System.out.println("Inserisci la porta del destinatario");
+                        mp.manda_connessione(s.nextInt(), "localhost", 1);
+                        //  }
                     } catch (IOException ex) {
                         Logger.getLogger(Thread_peer.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -97,9 +97,9 @@ public class Manage_peer {
                             ip_peer_connesso = vect[1];
                             System.out.println("SERVER: Connessione avvenuta con: " + nome_peer_connesso
                                     + " la cui porta è " + port_peer_connesso + " e l'indirizzo: " + ip_peer_connesso);
-                            if (i == 1) {
-                                manda_connessione(port_peer_connesso, ip_peer_connesso, 0);
-                            }
+
+                            manda_connessione(port_peer_connesso, ip_peer_connesso, 0);
+
                         }
                     }
                     case "m" -> {
@@ -134,9 +134,6 @@ public class Manage_peer {
         p.setAddress(InetAddress.getByName(ip_peer_connesso));
         p.setPort(port_peer_connesso);
         s.send(p);
-        if (i == 1) {
-            ricevi_connessione(0);
-        }
 
     }
 
