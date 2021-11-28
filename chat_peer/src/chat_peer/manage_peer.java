@@ -8,8 +8,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,8 +24,6 @@ import java.util.logging.Logger;
  */
 public class Manage_peer {
 
-    private Socket client_socket;
-    private ServerSocket server_socket;
     private String ip, name;
     private Integer port;
 
@@ -48,23 +50,15 @@ public class Manage_peer {
     }
 
     public Manage_peer(String name, String ip, Integer port) throws IOException {
-        client_socket = new Socket();
         this.ip = ip;
         this.port = port;
         this.name = name;
-        server_socket = new ServerSocket(this.port);
         connesso = false;
+
+        port_peer_connesso = null;
     }
 
     //get
-    public Socket getClient_socket() {
-        return client_socket;
-    }
-
-    public ServerSocket getServer_socket() {
-        return server_socket;
-    }
-
     public String getIp() {
         return ip;
     }
@@ -77,23 +71,25 @@ public class Manage_peer {
         return name;
     }
 
-    public void ricevi_connessione() {
+    public void ricevi_connessione(int i) throws SocketException {
+        byte[] data = new byte[1500];
+        DatagramPacket p = new DatagramPacket(data, data.length);
+        DatagramSocket s = new DatagramSocket(port);
         String[] vect;
-        InputStreamReader isr;
-        int i = 0;
         do {
-
             try {
-                client_socket = server_socket.accept();
-                isr = new InputStreamReader(client_socket.getInputStream());
-                BufferedReader br = new BufferedReader(isr);
-                vect = br.readLine().split(";"); //c;ip;porta;nome
+                s.receive(p);
+                if (port_peer_connesso != null) {
+                    if (p.getPort() != port_peer_connesso) {
+                        //mando pacchetto dicendo che il peer sta giá comunicando con un altro peer
+                    }
+                }
+                String str = new String(data);
+                vect = str.split(";"); //c;ip;porta;nome
                 switch (vect[0].toLowerCase()) {
                     case "c" -> {
                         //vuole effettuare una connessione
-                        if (connesso) {//controllo se siamo connessi con un'altro peer al momento
-
-                        } else {
+                        if (!connesso) {//controllo se siamo connessi con un'altro peer al momento
                             //salvo i dati dell'altro peer
                             nome_peer_connesso = vect[3];
                             port_peer_connesso = Integer.parseInt(vect[2]);
@@ -101,11 +97,17 @@ public class Manage_peer {
                             ip_peer_connesso = vect[1];
                             System.out.println("SERVER: Connessione avvenuta con: " + nome_peer_connesso
                                     + " la cui porta è " + port_peer_connesso + " e l'indirizzo: " + ip_peer_connesso);
-                            manda_connessione(port_peer_connesso, ip_peer_connesso);
+                            if (i == 1) {
+                                manda_connessione(port_peer_connesso, ip_peer_connesso, 0);
+                            }
                         }
                     }
                     case "m" -> {
-                        System.out.println("[" + nome_peer_connesso + "]: " + vect[1]);
+                        if (connesso) {
+                            System.out.println("[" + nome_peer_connesso + "]: " + vect[1]);
+                        } else {
+                            System.out.println("Devi prima connetterti a un peer");
+                        }
                     }
                     case "d" -> {
 
@@ -119,39 +121,27 @@ public class Manage_peer {
 
     }
 
-    public void manda_connessione(Integer port_peer_connesso, String ip_peer_connesso) {
+    //metodo per mandare una connessione
+    public void manda_connessione(Integer port_peer_connesso, String ip_peer_connesso, int i) throws SocketException, IOException {
         this.ip_peer_connesso = ip_peer_connesso;
         this.port_peer_connesso = port_peer_connesso;
-        try {
-            client_socket = new Socket(ip_peer_connesso, port_peer_connesso);
-            //qua devo mandare il mio indirizzo ip e la mia porta preceduti
-            PrintWriter out = new PrintWriter(client_socket.getOutputStream(), true);
-            out.println("c;" + ip + ";" + port + ";" + name);
 
-        } catch (IOException ex) {
-            Logger.getLogger(Manage_peer.class
-                    .getName()).log(Level.SEVERE, null, ex);
+        //qua devo mandare il mio indirizzo ip e la mia porta preceduti
+        byte[] data = new byte[1500];
+        data = ("c;" + ip + ";" + port + ";" + name).getBytes();
+        DatagramPacket p = new DatagramPacket(data, data.length);
+        DatagramSocket s = new DatagramSocket();
+        p.setAddress(InetAddress.getByName(ip_peer_connesso));
+        p.setPort(port_peer_connesso);
+        s.send(p);
+        if (i == 1) {
+            ricevi_connessione(0);
         }
 
     }
 
     public void manda_messaggi() {
-        String str = "";
-        do {
-            try {
-                Scanner s = new Scanner(System.in);
-                client_socket = new Socket(ip_peer_connesso, port_peer_connesso);
-                //qua devo mandare il mio indirizzo ip e la mia porta preceduti
-                PrintWriter out = new PrintWriter(client_socket.getOutputStream(), true);
-                System.out.println("[" + name + "]");
-                str = s.nextLine();
-                out.println("m;" + str);
 
-            } catch (IOException ex) {
-                Logger.getLogger(Manage_peer.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
-        } while (str != "stop");
     }
 
     public void ricevi_messaggi() {
