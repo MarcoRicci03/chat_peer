@@ -5,7 +5,6 @@
 package chat_peer;
 
 import java.net.SocketException;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

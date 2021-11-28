@@ -5,6 +5,7 @@
 package chat_peer;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,13 +51,19 @@ public class Thread_peer extends Thread {
                 }
 
                 case "m" -> {
-                    //Inizia a messaggiare
-                    mp.manda_messaggi();
+                    try {
+                        //Inizia a messaggiare
+                        mp.manda_messaggi();
+                    } catch (UnknownHostException ex) {
+                        Logger.getLogger(Thread_peer.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Thread_peer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
                 case "d" -> {
                     //Chiusura con peer
-
+                    mp.chiudi_connessione();
                 }
 
             }

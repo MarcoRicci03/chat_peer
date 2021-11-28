@@ -4,16 +4,12 @@
  */
 package chat_peer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +29,16 @@ public class Manage_peer {
     private Boolean connesso;
     private String ip_peer_connesso;
 
+    public Manage_peer(String name, String ip, Integer port) throws IOException {
+        this.ip = ip;
+        this.port = port;
+        this.name = name;
+        connesso = false;
+
+        port_peer_connesso = null;
+    }
+
+    //get
     public String getNome_peer_connesso() {
         return nome_peer_connesso;
     }
@@ -49,16 +55,6 @@ public class Manage_peer {
         return ip_peer_connesso;
     }
 
-    public Manage_peer(String name, String ip, Integer port) throws IOException {
-        this.ip = ip;
-        this.port = port;
-        this.name = name;
-        connesso = false;
-
-        port_peer_connesso = null;
-    }
-
-    //get
     public String getIp() {
         return ip;
     }
@@ -72,16 +68,19 @@ public class Manage_peer {
     }
 
     public void ricevi_connessione(int i) throws SocketException {
-        byte[] data = new byte[1500];
-        DatagramPacket p = new DatagramPacket(data, data.length);
+        byte[] data;
+        DatagramPacket p;
         DatagramSocket s = new DatagramSocket(port);
         String[] vect;
         do {
             try {
+                data = new byte[1500];
+                p = new DatagramPacket(data, data.length);
                 s.receive(p);
                 if (port_peer_connesso != null) {
                     if (p.getPort() != port_peer_connesso) {
                         //mando pacchetto dicendo che il peer sta giá comunicando con un altro peer
+                        mando_errore(p.getAddress(), p.getPort()); //problema con la porta, non viene settata
                     }
                 }
                 String str = new String(data);
@@ -99,7 +98,6 @@ public class Manage_peer {
                                     + " la cui porta è " + port_peer_connesso + " e l'indirizzo: " + ip_peer_connesso);
 
                             manda_connessione(port_peer_connesso, ip_peer_connesso);
-
                         }
                     }
                     case "m" -> {
@@ -111,6 +109,9 @@ public class Manage_peer {
                     }
                     case "d" -> {
 
+                    }
+                    case "r" -> {
+                        System.out.println(vect[1]);
                     }
                 }
             } catch (IOException ex) {
@@ -125,7 +126,6 @@ public class Manage_peer {
     public void manda_connessione(Integer port_peer_connesso, String ip_peer_connesso) throws SocketException, IOException {
         this.ip_peer_connesso = ip_peer_connesso;
         this.port_peer_connesso = port_peer_connesso;
-
         //qua devo mandare il mio indirizzo ip e la mia porta preceduti
         byte[] data = new byte[1500];
         data = ("c;" + ip + ";" + port + ";" + name).getBytes();
@@ -137,12 +137,43 @@ public class Manage_peer {
 
     }
 
-    public void manda_messaggi() {
-
+    public void mando_errore(InetAddress ip_destinatario, Integer port_destinatario) throws SocketException, UnknownHostException, IOException {
+        byte[] data = new byte[1500];
+        data = ("r;Il peer con a cui stai cercando di connetterti e' occupato").getBytes();
+        DatagramPacket p = new DatagramPacket(data, data.length);
+        DatagramSocket s = new DatagramSocket();
+        p.setAddress(ip_destinatario);
+        p.setPort(port_destinatario);
+        s.send(p);
     }
 
-    public void ricevi_messaggi() {
+    public void manda_messaggi() throws SocketException, UnknownHostException, IOException {
+        String str = "";
+        byte[] data;
+        Scanner tastiera;
+        DatagramPacket p;
+        DatagramSocket s;
+        do {
+            data = new byte[1500];
+            tastiera = new Scanner(System.in);
+            System.out.println("[" + name + "]");
+            str = tastiera.nextLine();
+            if (!str.equals("stop")) {
+                data = ("m;" + str).getBytes();
+                p = new DatagramPacket(data, data.length);
+                s = new DatagramSocket();
+                p.setAddress(InetAddress.getByName(ip_peer_connesso));
+                p.setPort(port_peer_connesso);
+                s.send(p);
+            }
+        } while (!str.equals("stop"));
+    }
 
+    public void chiudi_connessione() {
+        nome_peer_connesso = null;
+        port_peer_connesso = null;
+        connesso = false;
+        ip_peer_connesso = null;
     }
 
 }
