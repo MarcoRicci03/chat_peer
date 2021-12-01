@@ -24,7 +24,7 @@ public class Thread_ricevi extends Thread {
         int i = 0;
         do {
             try {
-                mp.ricevi_connessione(1);
+                mp.ricevi_connessione();
             } catch (SocketException ex) {
                 Logger.getLogger(Thread_ricevi.class.getName()).log(Level.SEVERE, null, ex);
             }

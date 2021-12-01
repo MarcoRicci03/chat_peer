@@ -29,6 +29,8 @@ public class Manage_peer {
     private Boolean connesso;
     private String ip_peer_connesso;
 
+    private Boolean scrivendo;
+
     public Manage_peer(String name, String ip, Integer port) throws IOException {
         this.ip = ip;
         this.port = port;
@@ -36,9 +38,15 @@ public class Manage_peer {
         connesso = false;
 
         port_peer_connesso = null;
+
+        scrivendo = false;
     }
 
     //get
+    public Boolean getScrivendo() {
+        return scrivendo;
+    }
+
     public String getNome_peer_connesso() {
         return nome_peer_connesso;
     }
@@ -67,7 +75,7 @@ public class Manage_peer {
         return name;
     }
 
-    public void ricevi_connessione(int i) throws SocketException {
+    public void ricevi_connessione() throws SocketException {
         byte[] data;
         DatagramPacket p;
         DatagramSocket s = new DatagramSocket(port);
@@ -103,6 +111,7 @@ public class Manage_peer {
                     case "m" -> {
                         if (connesso) {
                             System.out.println("[" + nome_peer_connesso + "]: " + vect[1]);
+                            scrivendo = true;
                         } else {
                             System.out.println("Devi prima connetterti a un peer");
                         }

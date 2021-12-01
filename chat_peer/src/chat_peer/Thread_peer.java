@@ -70,10 +70,7 @@ public class Thread_peer extends Thread {
                     //Chiusura con peer
                     mp.chiudi_connessione();
                 }
-
             }
-
         } while (true);
-
     }
 }
